@@ -227,7 +227,9 @@
 	<haxelib name="hxcpp" />
 	<haxelib name="extension-haptics" if="mobile" />
 	<haxelib name="extension-androidtools" if="android" />
-	<haxelib name="firebase" if="FIREBASE_CRASH_HANDLER" />
+	<section if="FIREBASE_CRASH_HANDLER">
+		<haxelib name="firebase" />
+	</section>
 	<haxelib name="tjson" version="1.4.0" />
 	<haxelib name="grig.audio" />
 	<haxelib name="funkin.vis" />
