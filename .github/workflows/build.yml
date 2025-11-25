@@ -86,11 +86,19 @@ jobs:
           haxelib run lime config ANDROID_SETUP true
           printf '%s' "$PLAYSTORE_FIREBASE" > ./setup/google-services.json
 
+      - name: Configure iOS
+        if: inputs.exportPath == 'android' 
+        run: printf '%s' "$PLAYSTORE_FIREBASE_IOS" > ./setup/GoogleService-Info.plist
+
       - name: Compile
         run: haxelib run lime build ${{ inputs.buildArgs }}
           # setup/google-services.json
 
-      - name: Upload debugging symbols
+      - name: Upload debugging symbols (Android)
+        if: inputs.exportPath == 'android' 
+        run: sh ./setup/firebase_spell.sh
+
+      - name: Upload debugging symbols (iOS)
         if: inputs.exportPath == 'android' 
         run: sh ./setup/firebase_spell.sh
 

@@ -72,7 +72,7 @@
 	<define name="ATSC_SUPPORT" unless="web"/>
 
 	<!-- Enables special crash handler in case you don't trust your players to report issues properly-->
-	<define name="FIREBASE_CRASH_HANDLER" if="android"/>
+	<define name="FIREBASE_CRASH_HANDLER" if="mobile"/>
 
 	<!-- Displays a "Touch here to play" screen-->
 	<define name="TOUCH_HERE_TO_PLAY" if="TOUCH_CONTROLS_ALLOWED debug" />
@@ -231,6 +231,9 @@
 	<section if="FIREBASE_CRASH_HANDLER">
 		<haxelib name="extension-firebase-crashlytics" />
 		<config:android pslice-firebase-sdk-path="yes" />
+		<template path="art/google-services.json" rename="google-services.json" if="android"/>
+		<template path="art/GoogleService-Info.plist" rename="GoogleService-Info.plist" if="ios"/>
+		<template path="art/GoogleService-Info.plist" rename="../GoogleService-Info.plist" if="ios"/>
 		<define name="NO_FIREBASE_ANDROID_PATCHES" />
 	</section>
 	<haxelib name="tjson" version="1.4.0" />
@@ -382,9 +385,6 @@
 	<section unless="PROFILE_BUILD">
 		<section if="mobile">
 			<config type="android" pslice-mono-icon="art/mobile/iconMono.png" />
-			
-			<config type="android" pslice-firebase-sdk-path="/home/mikolka/Desktop/firebase_cpp_sdk/" />
-			<template path="art/google-services.json" rename="google-services.json" />
 
 			<config type="ios" pslice-icon-dir="art/mobile/PSlice.appiconset" />
 			<icon path="art/mobile/iconAdaptive.png" if="android" />
