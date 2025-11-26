@@ -20,6 +20,7 @@ class CrashServer
 			FlxG.save.data.buildId = new flixel.math.FlxRandom().int();
 			FlxG.save.flush();
 		}
+		trace(FlxG.save.data.buildId);
 		Crashlytics.setUserId(FlxG.save.data.buildId);
 		#end
 	}
