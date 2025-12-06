@@ -26,7 +26,7 @@ body:
       required: true  
       
   - type: input
-    id: pslice-version
+    id: user-id
     attributes:
       label: "For mobile: Enter here your UserID (you can find it in latest.log)"
       placeholder: "123" 
