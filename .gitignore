@@ -27,4 +27,5 @@ art/build_html-debug.bat
 *.astc
 
 mod_core
+setup/google-services.json
 astc-textures
