@@ -31,50 +31,24 @@ jobs:
             .haxelib/
           restore-keys: |
             ${{ env.cacheLibrariesPath }}
-      - name: Restore existing build cache for faster compilation
-        id: load-cache
-        uses: actions/cache@v3
-        with:
-          # not caching the bin folder to prevent asset duplication and stuff like that
-          key: cache-build-html5
-          path: |
-            export/release/html5/haxe/
-            export/release/html5/obj/
-          restore-keys: |
-            cache-build-html5
             
-      - name: Upload Artifact
-        uses: actions/upload-artifact@main
-        with:
-          name: Html-build
-          path: export/release/html5/bin/*
-          if-no-files-found: error    
-
-      - name: Clearing already existing cache
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const caches = await github.rest.actions.getActionsCacheList({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
-            for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-build-html5") {
-                console.log('Clearing ' + cache.key + '...')
-                await github.rest.actions.deleteActionsCacheById({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  cache_id: cache.id,
-                })
-                console.log("Cache cleared.")
-              }
-            }
-      - name: Uploading new cache
-        uses: actions/cache@v3
-        with:
-          key: cache-build-html5
-          path: |
-            export/release/html5/haxe/
-            export/release/html5/obj/
-          restore-keys: |
-            cache-build-html5 
+              - name: Compile
+      - name: "Compile the game"  
+        run: haxelib run lime build html5
+          # setup/google-services.json
+      - name: Push to GitHub
+        run: |
+          USER_INFO=$(curl -s "https://api.github.com/users/${{ github.actor }}")
+          USERID=$(echo "$USER_INFO" | jq -r '.id')
+          USERNAME=$(echo "$USER_INFO" | jq -r '.name')
+          cd ./export/release/html5/bin
+          git init --initial-branch
+          git config --local user.email "actions@github.com"
+          git config --local user.name "P-Slice BF"
+          git remote add origin git@github.com:Psych-Slice/psych-slice.github.io.git
+          git add .
+          git commit --author="${USERNAME} <${USERID}+$(echo "$USERNAME" | sed 's/ /-/g')@users.noreply.github.com>" -m "Built and Pushed New NDLL's." || {
+              echo "Didn't commit anything, skipping git push."
+              exit 0
+          }
+          git push --force
