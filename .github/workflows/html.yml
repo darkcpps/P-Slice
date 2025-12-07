@@ -1,3 +1,4 @@
+name: Publish HTML version
 on:
   workflow_dispatch: 
 
@@ -36,10 +37,11 @@ jobs:
       - name: "Compile the game"  
         run: haxelib run lime build html5
           # setup/google-services.json
-      - name: Configure Android
+      - name: Configure SSH key
         env:
           PLAYSTORE_FIREBASE: ${{ secrets.PSLICE_HTML_UPLOAD_SSHKEY }}
         run: |
+          umask 077
           printf '%s' "$PLAYSTORE_FIREBASE" > ./ssh_key
       - name: Push to GitHub
         run: |
