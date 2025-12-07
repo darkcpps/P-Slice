@@ -42,7 +42,7 @@ jobs:
           USERID=$(echo "$USER_INFO" | jq -r '.id')
           USERNAME=$(echo "$USER_INFO" | jq -r '.name')
           cd ./export/release/html5/bin
-          git init --initial-branch
+          git init --initial-branch main
           git config --local user.email "actions@github.com"
           git config --local user.name "P-Slice BF"
           git remote add origin git@github.com:Psych-Slice/psych-slice.github.io.git
@@ -51,4 +51,4 @@ jobs:
               echo "Didn't commit anything, skipping git push."
               exit 0
           }
-          git push --force
+          git push --force --set-upstream origin main
