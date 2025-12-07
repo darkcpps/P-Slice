@@ -48,7 +48,7 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "P-Slice BF"
           echo "Unsetting extra headers"
-          git config --unset-all http.https://github.com/.extraheader
+          git config --unset-all http.https://github.com/.extraheader || echo "Extra unset failed"
           echo "Config end"
           git remote add origin git@github.com:Psych-Slice/psych-slice.github.io.git
           git add .
