@@ -43,18 +43,18 @@ jobs:
           printf '%s' "$PLAYSTORE_FIREBASE" > ./ssh_key
       - name: Push to GitHub
         run: |
-          USER_INFO=$(curl -s "https://api.github.com/users/${{ github.actor }}")
-          USERID=$(echo "$USER_INFO" | jq -r '.id')
-          USERNAME=$(echo "$USER_INFO" | jq -r '.name')
           cd ./export/release/html5/bin
           git init --initial-branch main
           git config --local user.email "actions@github.com"
           git config --local user.name "P-Slice BF"
+          echo "Unsetting extra headers"
           git config --unset-all http.https://github.com/.extraheader
+          echo "Config end"
           git remote add origin git@github.com:Psych-Slice/psych-slice.github.io.git
           git add .
-          git commit --author="${USERNAME} <${USERID}+$(echo "$USERNAME" | sed 's/ /-/g')@users.noreply.github.com>" -m "Built and Pushed New NDLL's." || {
+          echo "Pushing"
+          git commit -m "Built and Pushed" || {
               echo "Didn't commit anything, skipping git push."
               exit 0 
           }
-          GIT_SSH_COMMAND='ssh -i ./ssh_key -o IdentitiesOnly=yes' git push --force --set-upstream origin main
+          GIT_SSH_COMMAND='ssh -i ./../../../../ssh_key -o IdentitiesOnly=yes' git push --force --set-upstream origin main
