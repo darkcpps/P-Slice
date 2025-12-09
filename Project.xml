@@ -134,7 +134,7 @@
 	<window if="html5" resizable="true" fullscreen="true" />
 
 	<!--Desktop-specific-->
-	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false" />
+	<window if="desktop" orientation="landscape" fullscreen="false" resizable="false" vsync="false" />
 
 	<!--Mobile-specific-->
 	<window if="mobile" orientation="landscape" fullscreen="true" resizable="false"

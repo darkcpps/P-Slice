@@ -98,7 +98,7 @@ class DesktopMenuState extends FlxBasic
 
 			// Center and position
 			menuItem.updateHitbox();
-			menuItem.screenCenter(X);
+			menuItem.x = 100; // Left alignment
 			menuItem.y = startY + (i * spacingY);
 			menuItem.scrollFactor.set(0, 1); // Allow vertical scrolling
 
@@ -128,22 +128,50 @@ class DesktopMenuState extends FlxBasic
 		{
 			var item = menuItems.members[i];
 
+			// Reset offsets for clean state or jitter application
+			item.centerOffsets();
+
 			if (i == curSelected)
 			{
-				// Selected: Pulse and Center
-				var pulse:Float = 1.0 + Math.sin(animTimer * 4) * 0.05;
-				item.scale.set(pulse, pulse);
-				item.screenCenter(X);
+				// Selected: Horror Jitter & Glitch
+				var shakeIntensity:Float = 2.0;
+				if (FlxG.random.bool(5))
+					shakeIntensity = 5.0; // Random violent shakes
+
+				// Target positions - Move right (130) when selected
+				var targetX:Float = 290;
+				var targetY:Float = 100 + (i * 160);
+
+				// Smooth move to target
+				item.x = FlxMath.lerp(item.x, targetX, elapsed * 10);
+				item.y = FlxMath.lerp(item.y, targetY, elapsed * 10);
+
+				// Apply jitter via offset (does not affect x/y values)
+				item.offset.x += FlxG.random.float(-shakeIntensity, shakeIntensity);
+				item.offset.y += FlxG.random.float(-shakeIntensity, shakeIntensity);
+
+				item.angle = FlxG.random.float(-1, 1);
+				item.scale.set(1.1, 1.1); // Slightly larger
+				item.alpha = 1;
 			}
 			else
 			{
-				// Non-selected: Smaller and slightly bobbing
+				// Non-selected: Ghostly fade and slow float
 				item.scale.set(0.8, 0.8);
+				item.angle = 0;
 
-				// Idle float effect
-				var targetY:Float = (100 + (i * 160)) + Math.sin(animTimer * 2 + i) * 5;
-				item.y = FlxMath.lerp(item.y, targetY, elapsed * 6);
-				item.screenCenter(X);
+				// Target positions - Return to left (100)
+				var targetX:Float = 100;
+				// Eerie floating Y
+				var targetY:Float = (100 + (i * 160)) + Math.sin(animTimer * 1.5 + i * 0.5) * 10;
+
+				// Smooth float
+				item.x = FlxMath.lerp(item.x, targetX, elapsed * 6);
+				item.y = FlxMath.lerp(item.y, targetY, elapsed * 4);
+
+				// Pale/Ghostly look
+				item.alpha = 0.4 + 0.1 * Math.sin(animTimer * 2 + i);
+				item.color = 0xFFAAAAAA; // Desaturate slightly
 			}
 		}
 
@@ -179,11 +207,15 @@ class DesktopMenuState extends FlxBasic
 			}
 		}
 
-		// Subtle background color shift
+		// Horror background: Pulse between Black and Dark Red
 		if (host.bg != null)
 		{
-			var hue:Float = (animTimer * 10) % 360;
-			host.bg.color = FlxColor.fromHSB(hue, 0.2, 1.0);
+			var pulse:Float = 0.5 + 0.5 * Math.sin(animTimer * 0.5); // Slow breathing pulse
+			host.bg.color = FlxColor.interpolate(FlxColor.BLACK, 0xFF330000, pulse);
+
+			// Occasional lightning/glitch flash
+			if (FlxG.random.bool(0.5)) // 0.5% chance per frame
+				host.bg.color = FlxColor.interpolate(host.bg.color, FlxColor.RED, 0.3);
 		}
 
 		super.update(elapsed);
@@ -207,7 +239,10 @@ class DesktopMenuState extends FlxBasic
 			selectedSomethin = true;
 
 			if (VsliceOptions.FLASHBANG)
+			{
+				host.magenta.color = 0xFF880000; // Blood red flash
 				FlxFlicker.flicker(host.magenta, 1.1, 0.15, false);
+			}
 
 			// Screen shake
 			FlxG.camera.shake(0.003, 0.15);
