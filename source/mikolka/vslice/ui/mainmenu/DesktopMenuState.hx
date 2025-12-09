@@ -21,15 +21,7 @@ import flixel.FlxObject;
 @:access(mikolka.vslice.ui.MainMenuState)
 class DesktopMenuState extends FlxBasic
 {
-	var optionShit:Array<String> = [
-		'story_mode',
-		'freeplay',
-		#if MODS_ALLOWED 'mods', #end
-		#if ACHIEVEMENTS_ALLOWED 'awards', #end
-		'credits',
-		#if !switch 'donate', #end
-		'options'
-	];
+	var optionShit:Array<String> = ['story_mode', 'freeplay', 'credits', 'options'];
 
 	public static var curSelected:Int = 0;
 	public static var windowScaled:Bool = false;
@@ -206,9 +198,9 @@ class DesktopMenuState extends FlxBasic
 		FlxTransitionableState.skipNextTransIn = false;
 		FlxTransitionableState.skipNextTransOut = false;
 
-		if (optionShit[curSelected] == 'donate')
+		if (false)
 		{
-			CoolUtil.browserLoad('https://needlejuicerecords.com/pages/friday-night-funkin');
+			// Removed donate button
 		}
 		else
 		{
@@ -246,16 +238,6 @@ class DesktopMenuState extends FlxBasic
 								changeItem(0, true);
 							});
 						}
-
-					#if MODS_ALLOWED
-					case 'mods':
-						MusicBeatState.switchState(new ModsMenuState());
-					#end
-
-					#if ACHIEVEMENTS_ALLOWED
-					case 'awards':
-						MusicBeatState.switchState(new AchievementsMenuState());
-					#end
 
 					case 'credits':
 						MusicBeatState.switchState(new CreditsState());
