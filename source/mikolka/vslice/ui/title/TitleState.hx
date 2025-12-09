@@ -19,8 +19,6 @@ import mikolka.vslice.components.ScreenshotPlugin;
 import mikolka.vslice.ui.title.AttractState;
 #end
 
-
-
 typedef TitleData =
 {
 	var titlex:Float;
@@ -55,6 +53,14 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
+		#if debug
+		if (FlxG.sound.music == null)
+			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+
+		MusicBeatState.switchState(new MainMenuState());
+		return;
+		#end
+
 		CacheSystem.clearStoredMemory();
 		super.create();
 		CacheSystem.clearUnusedMemory();
@@ -83,7 +89,7 @@ class TitleState extends MusicBeatState
 		#if TITLE_SCREEN_EASTER_EGG easterEggData(); #end
 		Conductor.bpm = musicBPM;
 
-		logoBl = new FlxSprite(logoPosition.x+cutout_size, logoPosition.y);
+		logoBl = new FlxSprite(logoPosition.x + cutout_size, logoPosition.y);
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
 		logoBl.antialiasing = VsliceOptions.ANTIALIASING;
 
@@ -91,7 +97,7 @@ class TitleState extends MusicBeatState
 		logoBl.animation.play('bump');
 		logoBl.updateHitbox();
 
-		gfDance = new FlxSprite(gfPosition.x+cutout_size, gfPosition.y);
+		gfDance = new FlxSprite(gfPosition.x + cutout_size, gfPosition.y);
 		gfDance.antialiasing = VsliceOptions.ANTIALIASING;
 
 		if (VsliceOptions.SHADERS)
@@ -115,7 +121,7 @@ class TitleState extends MusicBeatState
 		}
 
 		var animFrames:Array<FlxFrame> = [];
-		titleText = new FlxSprite(enterPosition.x+cutout_size, enterPosition.y);
+		titleText = new FlxSprite(enterPosition.x + cutout_size, enterPosition.y);
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
 		@:privateAccess
 		{
@@ -615,13 +621,13 @@ class TitleState extends MusicBeatState
 	 */
 	function moveToAttract():Void
 	{
-		#if VIDEOS_ALLOWED 
+		#if VIDEOS_ALLOWED
 		if (!Std.isOfType(FlxG.state, TitleState))
 			return;
 		#if LEGACY_PSYCH
-		FlxG.switchState(new AttractState()); 
+		FlxG.switchState(new AttractState());
 		#else
-		FlxG.switchState(() -> new AttractState()); 
+		FlxG.switchState(() -> new AttractState());
 		#end
 		#end
 	}

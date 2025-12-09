@@ -25,7 +25,6 @@ import lime.app.Application;
 import lime.graphics.Image;
 #end
 
-
 #if (linux && !debug)
 @:cppInclude('./external/gamemode_client.h')
 @:cppFileCode('#define GAMEMODE_AUTO')
@@ -49,7 +48,6 @@ class Main extends Sprite
 	// ? This runs before we attempt to precache things
 	public static function loadGameEarly()
 	{
-
 		CrashServer.init();
 
 		#if (linux || mac) // fix the app icon not showing up on the Linux Panel
@@ -67,7 +65,7 @@ class Main extends Sprite
 		StorageUtil.requestPermissions();
 		#end
 
-		//? iOS seems to be crasing on this line... 
+		// ? iOS seems to be crasing on this line...
 		#if android
 		Sys.setCwd(StorageUtil.getStorageDirectory());
 		#end
@@ -76,8 +74,7 @@ class Main extends Sprite
 		extension.haptics.Haptic.initialize();
 		#end
 		#if sys
-
-		//cpp.vm.Gc.setTargetFreeSpacePercentage(30);
+		// cpp.vm.Gc.setTargetFreeSpacePercentage(30);
 		Logger.startLogging();
 		trace("CWD IS " + StorageUtil.getStorageDirectory());
 		#end
@@ -135,11 +132,8 @@ class Main extends Sprite
 		setupGame();
 	}
 
-
-
 	private function setupGame():Void
 	{
-
 		trace(backend.Native.buildSystemInfo());
 		#if HXCPP_TRACY
 		trace("Starting tracy");
@@ -165,8 +159,7 @@ class Main extends Sprite
 		#end
 
 		trace("Initializing save .sol");
-		FlxG.save.bind('funkin', CoolUtil.getSavePath(), (rawSave, error) ->
-		{
+		FlxG.save.bind('funkin', CoolUtil.getSavePath(), (rawSave, error) -> {
 			#if sys
 			trace("Couldn't load main save. Attempting to extract");
 			try
@@ -272,7 +265,6 @@ class Main extends Sprite
 		ClientPrefs.loadDefaultKeys();
 		#if ACHIEVEMENTS_ALLOWED Achievements.load(); #end
 
-
 		trace("Loading game objest...");
 		var gameObject = new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
 			game.skipSplash, game.startFullscreen);
@@ -283,6 +275,17 @@ class Main extends Sprite
 		gameObject._customSoundTray = mikolka.vslice.components.FunkinSoundTray;
 
 		addChild(gameObject);
+
+		#if desktop
+		var screenWidth = Lib.current.stage.window.display.currentMode.width;
+		var screenHeight = Lib.current.stage.window.display.currentMode.height;
+
+		// Start tiny (centered) and STAY tiny until Main Menu
+		Lib.current.stage.window.width = 1;
+		Lib.current.stage.window.height = 1;
+		Lib.current.stage.window.x = Std.int((screenWidth - 1) / 2);
+		Lib.current.stage.window.y = Std.int((screenHeight - 1) / 2);
+		#end
 
 		trace("Finishing up..");
 		debugDisplay = new FunkinDebugDisplay(10, 10, 0xFFFFFF);
@@ -330,7 +333,7 @@ class Main extends Sprite
 		#if mobile
 		#if android FlxG.android.preventDefaultKeys = [BACK]; #end
 		lime.system.System.allowScreenTimeout = ClientPrefs.data.screensaver;
-		//Application.current.window.vsync = ClientPrefs.data.vsync;
+		// Application.current.window.vsync = ClientPrefs.data.vsync;
 		#end
 
 		// shader coords fix
