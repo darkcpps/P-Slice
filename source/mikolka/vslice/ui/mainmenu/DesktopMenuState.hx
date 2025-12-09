@@ -21,7 +21,7 @@ import flixel.FlxObject;
 @:access(mikolka.vslice.ui.MainMenuState)
 class DesktopMenuState extends FlxBasic
 {
-	var optionShit:Array<String> = ['story_mode', 'freeplay', 'credits', 'options'];
+	var optionShit:Array<String> = ['story_mode', 'credits', 'options'];
 
 	public static var curSelected:Int = 0;
 	public static var windowScaled:Bool = false;
@@ -253,26 +253,6 @@ class DesktopMenuState extends FlxBasic
 				{
 					case 'story_mode':
 						MusicBeatState.switchState(new StoryMenuState());
-					case 'freeplay':
-						{
-							host.persistentDraw = true;
-							host.persistentUpdate = false;
-							FlxTransitionableState.skipNextTransIn = true;
-							FlxTransitionableState.skipNextTransOut = true;
-
-							host.openSubState(new FreeplayState());
-							host.subStateOpened.addOnce(state ->
-							{
-								for (i in 0...menuItems.members.length)
-								{
-									menuItems.members[i].revive();
-									menuItems.members[i].alpha = 1;
-									menuItems.members[i].visible = true;
-									selectedSomethin = false;
-								}
-								changeItem(0, true);
-							});
-						}
 
 					case 'credits':
 						MusicBeatState.switchState(new CreditsState());
